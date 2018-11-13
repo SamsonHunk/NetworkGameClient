@@ -7,11 +7,12 @@ public:
 	Game();
 	~Game();
 
-	void init(sf::RenderWindow* windowIn, Input* in);
+	void init(sf::RenderWindow* windowIn, Input* in, sf::UdpSocket* socketIn);
 	void update(float dt);
 	void render();
 	void deload();
+	GameState needsChange();
 
 private:
-
+	
 };

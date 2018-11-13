@@ -1,10 +1,10 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
 #include <Box2D.h>
 #include "State.h"
 #include "Input.h"
+#include "Global.h"
 
-
-static enum class GameState {Menu, Game, NoChange}; //enumerator for the current game state
 
 
 int main()
@@ -14,6 +14,7 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Simple Snap Brother"); //initialise game window
 	float deltaTime; //delta time for accurate movement between frames
 	sf::Clock clock; //clock to time deltatime
+	sf::UdpSocket socket; //UDP socket for communicating with the server
 
 	while (window.isOpen())
 	{
