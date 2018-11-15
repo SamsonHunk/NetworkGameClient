@@ -14,5 +14,6 @@ public:
 	GameState needsChange();
 
 private:
-	
+	sf::RectangleShape floor;
+	b2World* physicsWorld;
 };

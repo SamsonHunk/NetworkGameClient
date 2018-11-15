@@ -4,6 +4,7 @@
 #include "State.h"
 #include "Input.h"
 #include "Global.h"
+#include "Game.h"
 
 
 
@@ -15,6 +16,8 @@ int main()
 	float deltaTime; //delta time for accurate movement between frames
 	sf::Clock clock; //clock to time deltatime
 	sf::UdpSocket socket; //UDP socket for communicating with the server
+	currentState = new Game;
+	currentState->init(&window, &input, &socket);
 
 	while (window.isOpen())
 	{
@@ -53,7 +56,10 @@ int main()
 		deltaTime = clock.restart().asSeconds();
 		//calculate delta time
 		currentState->update(deltaTime);
+
+		window.clear();
 		currentState->render();
+		window.display();
 		//run game logic
 
 		//check if we need to check gamestate
