@@ -1,5 +1,6 @@
 #pragma once
 #include "State.h"
+#include "Player.h"
 //state for ingame
 class Game: public State
 {
@@ -16,4 +17,6 @@ public:
 private:
 	sf::RectangleShape floor;
 	b2World* physicsWorld;
+	Player* player;
+	sf::Texture* playerTexture;
 };

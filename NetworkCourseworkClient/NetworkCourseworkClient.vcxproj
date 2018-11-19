@@ -125,12 +125,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameObj.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameObj.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="State.h" />
   </ItemGroup>
