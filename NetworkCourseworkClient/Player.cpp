@@ -3,14 +3,34 @@
 void Player::update(float dt)
 {
 	physicsUpdate();
+
 	if (inputManager->getKey(leftControl))
 	{
-		physicsBody->SetLinearVelocity(b2Vec2(-speed * dt, 0));
+		currentState = PlayerStates::movingLeft;
 	}
-
-	if (inputManager->getKey(rightControl))
+	else if (inputManager->getKey(rightControl))
 	{
-		physicsBody->SetLinearVelocity(b2Vec2(speed * dt, 0));
+		currentState = PlayerStates::movingRight;
+	}
+	else
+	{
+		currentState = PlayerStates::stationary;
+	}
+	
+	b2Vec2 currentVelocity = physicsBody->GetLinearVelocity();
+	switch (currentState)
+	{
+	case PlayerStates::movingLeft:
+		physicsBody->SetLinearVelocity(b2Vec2(-speed, currentVelocity.y));
+		break;
+	case PlayerStates::movingRight:
+		physicsBody->SetLinearVelocity(b2Vec2(speed, currentVelocity.y));
+		break;
+	case PlayerStates::stationary:
+		physicsBody->SetLinearVelocity(b2Vec2(0, currentVelocity.y));
+		break;
+	default:
+		break;
 	}
 }
 
@@ -21,12 +41,12 @@ void Player::init()
 	//setup player physics body
 	b2BodyDef playerBodyDef;
 	playerBodyDef.type = b2_dynamicBody;
-	playerBodyDef.position = b2Vec2(0, 0);
+	playerBodyDef.position = b2Vec2(600, 0);
 	physicsBody = physicsWorld->CreateBody(&playerBodyDef);
 
 	//setup the shape of the player
 	b2PolygonShape playerShape;
-	playerShape.SetAsBox(.5, 1);
+	playerShape.SetAsBox(64, 80);
 
 	//setup the player fixture
 	b2FixtureDef playerFixture;
@@ -36,4 +56,9 @@ void Player::init()
 	//attach the shape to the physicsbody
 	physicsBody->CreateFixture(&playerFixture);
 	physicsBody->SetUserData(this);
+}
+
+PlayerStates Player::getState()
+{
+	return currentState;
 }

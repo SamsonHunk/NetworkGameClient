@@ -6,7 +6,8 @@
 #include "Global.h"
 #include "Game.h"
 
-
+// The IP address of the server
+#define SERVERIP "127.0.0.1"
 
 int main()
 {
@@ -18,6 +19,11 @@ int main()
 	sf::UdpSocket socket; //UDP socket for communicating with the server
 	currentState = new Game;
 	currentState->init(&window, &input, &socket);
+
+	if (socket.bind(7777, sf::IpAddress("127.0.0.1")) != socket.Done)
+	{//if server connect fails
+		return 1;
+	}
 
 	while (window.isOpen())
 	{
@@ -53,7 +59,7 @@ int main()
 				break;
 			}
 		}
-		deltaTime = clock.restart().asSeconds();
+		deltaTime = clock.restart().asMilliseconds();
 		//calculate delta time
 		currentState->update(deltaTime);
 
@@ -76,8 +82,6 @@ int main()
 			case GameState::Game:
 				break;
 			case GameState::NoChange:
-				break;
-			default:
 				break;
 			}
 		}

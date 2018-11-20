@@ -7,6 +7,10 @@ public://function declarations
 	void update(float dt);
 	void init();
 
+	PlayerStates getState();
+
 private:
 	int speed = 5;
+	PlayerStates currentState = PlayerStates::stationary;
+	bool inAir;
 };
