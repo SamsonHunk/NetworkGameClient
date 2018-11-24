@@ -17,9 +17,12 @@ public:
 
 private:
 	sf::RectangleShape floor;
+	sf::IpAddress serverIp;
 	b2World* physicsWorld;
 	Player* player;
 	Floor* gameFloor;
 	sf::Texture* playerTexture;
 	sf::Texture* floorTexture;
+	sf::Packet outPacket;
+	sf::Packet inPacket;
 };

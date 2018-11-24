@@ -9,9 +9,16 @@ namespace GLOBALVARS
 	extern int leftControl = sf::Keyboard::A;
 	extern int rightControl = sf::Keyboard::D;
 
+
 	extern struct playerMoveMessage {
-		PlayerStates stateMessage;
-		b2Vec2 position;
+		int stateMessage;
+		float xPos;
+		float yPos;
+	};
+
+	extern struct connectionMessage {
+		std::string clientIp;
+		unsigned short clientPort;
 	};
 }
 #endif // !GLOBALVARS

@@ -26,13 +26,23 @@ void Game::init(sf::RenderWindow * windowIn, Input * in, sf::UdpSocket * socketI
 
 	playerTexture->loadFromFile("image/player.png");
 	floorTexture->loadFromFile("image/floor.png");
+	
+	serverIp = sf::IpAddress::LocalHost;
+	connectionMessage packetOut;
+	packetOut.clientIp = "127.0.0.1";
+	packetOut.clientPort = 7778;
+
+	outPacket << packetOut.clientIp << packetOut.clientPort;
+	if (socket->send(outPacket,serverIp, 7777) != sf::Socket::Done) //connect to server
+	{
+		//error
+	}
 
 	gameFloor = new Floor(physicsWorld, floorTexture, input, windowIn);
 	gameFloor->init();
 
 	player = new Player(physicsWorld, playerTexture, input, windowIn);
 	player->init();
-
 }
 
 void Game::update(float dt)

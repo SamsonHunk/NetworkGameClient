@@ -20,7 +20,7 @@ int main()
 	currentState = new Game;
 	currentState->init(&window, &input, &socket);
 
-	if (socket.bind(7777, sf::IpAddress("127.0.0.1")) != socket.Done)
+	if (socket.bind(7778, sf::IpAddress("127.0.0.1")) != socket.Done)
 	{//if server connect fails
 		return 1;
 	}
