@@ -50,6 +50,7 @@ void Game::update(float dt)
 	physicsWorld->Step(0.06f, 6, 2);
 	player->update(dt);
 	gameFloor->update(dt);
+	sendPackets();
 }
 
 void Game::render()
@@ -66,4 +67,20 @@ void Game::deload()
 GameState Game::needsChange()
 {
 	return GameState::NoChange;
+}
+
+void Game::sendPackets()
+{//send packet of current position and state of the controlling player to the server
+	playerMoveMessage packetOut;
+	sf::Packet packet;
+	packetOut.stateMessage = static_cast<int>(player->getState());
+	packetOut.xPos = player->getPhysicsBody()->GetPosition().x;
+	packetOut.xPos = player->getPhysicsBody()->GetPosition().x;
+	packetOut.playerNum = 0;
+	//shove data into packet
+	packet << packetOut;
+	if (socket->send(packet, serverIp, 7777) != sf::Socket::Done)
+	{
+		//error here
+	}
 }

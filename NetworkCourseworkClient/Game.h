@@ -25,4 +25,6 @@ private:
 	sf::Texture* floorTexture;
 	sf::Packet outPacket;
 	sf::Packet inPacket;
+
+	void sendPackets();
 };

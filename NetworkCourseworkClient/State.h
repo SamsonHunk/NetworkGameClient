@@ -4,7 +4,7 @@
 #include <Box2D.h>
 #include "Input.h"
 #include "Global.h"
-
+#include <thread>
 
 class State //parent gamestate class, purely virtual
 {
