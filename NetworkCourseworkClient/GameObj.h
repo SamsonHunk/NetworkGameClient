@@ -4,6 +4,8 @@
 #include "Input.h"
 #include "Global.h"
 
+//using GLOBALVARS::PlayerStates;
+
 class GameObj
 {
 public:

@@ -6,6 +6,8 @@
 #include "Global.h"
 #include <thread>
 
+//using  GLOBALVARS::PlayerStates;
+
 class State //parent gamestate class, purely virtual
 {
 public:

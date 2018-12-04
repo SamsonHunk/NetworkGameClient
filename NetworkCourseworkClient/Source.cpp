@@ -79,7 +79,7 @@ int main()
 			{//run init function and load the next game state
 			case GameState::Menu:
 				break;
-			case GameState::Game:
+			case GameState::GameENUM:
 				break;
 			case GameState::NoChange:
 				break;

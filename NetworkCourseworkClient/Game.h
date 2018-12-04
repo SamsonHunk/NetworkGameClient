@@ -2,6 +2,7 @@
 #include "State.h"
 #include "Player.h"
 #include "Floor.h"
+
 //state for ingame
 class Game: public State
 {

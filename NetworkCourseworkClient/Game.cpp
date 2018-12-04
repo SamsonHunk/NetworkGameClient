@@ -73,12 +73,13 @@ void Game::sendPackets()
 {//send packet of current position and state of the controlling player to the server
 	playerMoveMessage packetOut;
 	sf::Packet packet;
+
 	packetOut.stateMessage = static_cast<int>(player->getState());
 	packetOut.xPos = player->getPhysicsBody()->GetPosition().x;
 	packetOut.xPos = player->getPhysicsBody()->GetPosition().x;
 	packetOut.playerNum = 0;
 	//shove data into packet
-	packet << packetOut;
+	//packet << packetOut;
 	if (socket->send(packet, serverIp, 7777) != sf::Socket::Done)
 	{
 		//error here

@@ -1,9 +1,12 @@
 #ifndef GLOBALVARS
 #define GLOBALVARS
+extern enum class PlayerStates { movingLeft, movingRight, stationary, movingUp, movingDown };
+
 namespace GLOBALVARS
 {
-	extern enum class GameState { Menu, Game, NoChange }; //enumerator for the current game state
-	extern 	enum class PlayerStates { movingLeft, movingRight, stationary, movingUp, movingDown };
+
+	extern enum  GameState { Menu, GameENUM, NoChange }; //enumerator for the current game state
+
 	//enum for current playerstate
 
 	extern int leftControl = sf::Keyboard::A;
@@ -11,6 +14,7 @@ namespace GLOBALVARS
 
 
 	extern struct playerMoveMessage {
+		int messageType = 1;
 		int stateMessage;
 		float xPos;
 		float yPos;
@@ -19,6 +23,7 @@ namespace GLOBALVARS
 
 	extern struct  connectionMessage
 	{
+		int messageType = 0;
 		std::string clientIp;
 		unsigned short clientPort;
 	};

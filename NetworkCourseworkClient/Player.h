@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObj.h"
+
 class Player: public GameObj
 {
 public://function declarations
