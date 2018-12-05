@@ -27,6 +27,18 @@ namespace GLOBALVARS
 		std::string clientIp;
 		unsigned short clientPort;
 	};
+
+	extern struct serverPositionPing
+	{
+		int messageType = 2;
+		float xPos1;
+		float yPos1;
+		int player1State;
+		float xPos2;
+		float yPos2;
+		int player2State;
+	};
 }
+
 #endif // !GLOBALVARS
 //file to store project wide data containers

@@ -77,7 +77,6 @@ void Game::sendPackets()
 	packetOut.stateMessage = static_cast<int>(player->getState());
 	packetOut.xPos = player->getPhysicsBody()->GetPosition().x;
 	packetOut.xPos = player->getPhysicsBody()->GetPosition().x;
-	packetOut.playerNum = 0;
 	//shove data into packet
 	//packet << packetOut;
 	if (socket->send(packet, serverIp, 7777) != sf::Socket::Done)
