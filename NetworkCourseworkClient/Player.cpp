@@ -34,14 +34,14 @@ void Player::update(float dt)
 	}
 }
 
-void Player::init()
+void Player::init(float x, float y)
 {
 	objectSprite.setColor(sf::Color::Red);
 
 	//setup player physics body
 	b2BodyDef playerBodyDef;
 	playerBodyDef.type = b2_dynamicBody;
-	playerBodyDef.position = b2Vec2(600, 0);
+	playerBodyDef.position = b2Vec2(x, y);
 	physicsBody = physicsWorld->CreateBody(&playerBodyDef);
 
 	//setup the shape of the player
@@ -57,6 +57,7 @@ void Player::init()
 	physicsBody->CreateFixture(&playerFixture);
 	physicsBody->SetUserData(this);
 }
+
 
 PlayerStates Player::getState()
 {

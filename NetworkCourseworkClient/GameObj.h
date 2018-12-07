@@ -20,7 +20,7 @@ public:
 	//render the object
 	//virtual functions for the object
 	virtual void update(float dt) = 0;
-	virtual void init() = 0;
+	virtual void init(float x, float y) = 0;
 
 protected:
 	b2World* physicsWorld;

@@ -5,7 +5,7 @@ void Floor::update(float dt)
 	physicsUpdate();
 }
 
-void Floor::init()
+void Floor::init(float x, float y)
 {
 	//setup floor physics body
 	b2BodyDef floorBodyDef;

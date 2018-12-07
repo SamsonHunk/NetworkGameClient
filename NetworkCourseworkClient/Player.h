@@ -6,7 +6,7 @@ class Player: public GameObj
 public://function declarations
 	using GameObj::GameObj;
 	void update(float dt);
-	void init();
+	void init(float x, float y);
 
 	PlayerStates getState();
 

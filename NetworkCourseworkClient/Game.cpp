@@ -31,18 +31,32 @@ void Game::init(sf::RenderWindow * windowIn, Input * in, sf::UdpSocket * socketI
 	connectionMessage packetOut;
 	packetOut.clientIp = "127.0.0.1";
 	packetOut.clientPort = 7778;
+	packetOut.messageType = 0;
 
-	outPacket << packetOut.clientIp << packetOut.clientPort;
+	unsigned short clientPort = 7778;
+	socket->setBlocking(true);
+	outPacket << packetOut.messageType << packetOut.clientIp << packetOut.clientPort;
 	if (socket->send(outPacket,serverIp, 7777) != sf::Socket::Done) //connect to server
 	{
 		//error
 	}
+	sf::Packet connectionPacket;
+	playerMoveMessage connectionConfirm;
+	//wait for a message for the server telling us we are in the game
+	if (socket->receive(connectionPacket, serverIp, clientPort) != sf::Socket::Done)
+	{
+		//error connecting to server
+	}
+	else
+	{
+		connectionPacket >> connectionConfirm.messageType >> connectionConfirm.stateMessage >> connectionConfirm.xPos >> connectionConfirm.yPos >> connectionConfirm.playerNum;
+	}
 
 	gameFloor = new Floor(physicsWorld, floorTexture, input, windowIn);
-	gameFloor->init();
+	gameFloor->init(0,0);
 
 	player = new Player(physicsWorld, playerTexture, input, windowIn);
-	player->init();
+	player->init(connectionConfirm.xPos, connectionConfirm.yPos);
 }
 
 void Game::update(float dt)
