@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObj.cpp" />
@@ -137,6 +138,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObj.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Player2.h" />

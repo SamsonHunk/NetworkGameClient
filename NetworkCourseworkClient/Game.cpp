@@ -16,7 +16,7 @@ void Game::init(sf::RenderWindow * windowIn, Input * in, sf::UdpSocket * socketI
 	socket = socketIn;
 
 	unsigned short serverPort = 7777;
-	unsigned short clientPort = 5410;
+	unsigned short clientPort = 5400;
 
 	//initialise gameworld gravity
 	physicsWorld = new b2World(b2Vec2(0, .5));

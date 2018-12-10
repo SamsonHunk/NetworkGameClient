@@ -7,6 +7,7 @@ void Floor::update(float dt)
 
 void Floor::init(float x, float y)
 {
+	objectSprite.setScale(sf::Vector2f(2, 1));
 	//setup floor physics body
 	b2BodyDef floorBodyDef;
 	floorBodyDef.type = b2_staticBody;

@@ -20,7 +20,7 @@ int main()
 	currentState = new Game;
 	currentState->init(&window, &input, &socket);
 
-	unsigned short port = 5410;
+	unsigned short port = 5400;
 
 	if (socket.bind(port, "127.0.0.1") != socket.Done)
 	{//if server connect fails
