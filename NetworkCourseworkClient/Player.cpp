@@ -36,7 +36,7 @@ void Player::update(float dt)
 
 void Player::init(float x, float y)
 {
-	objectSprite.setColor(sf::Color::Red);
+	objectSprite.setColor(sf::Color::Blue);
 
 	//setup player physics body
 	b2BodyDef playerBodyDef;

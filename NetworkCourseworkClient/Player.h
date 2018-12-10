@@ -14,4 +14,5 @@ private:
 	int speed = 5;
 	PlayerStates currentState = PlayerStates::stationary;
 	bool inAir;
+	bool left;//true if facing left, false if facing right
 };
