@@ -7,6 +7,8 @@ public:
 	void update(float dt);
 	void init(float x, float y);
 
+	ObjectType getType() { return ObjectType::FLOOR; };
+
 private:
 
 };

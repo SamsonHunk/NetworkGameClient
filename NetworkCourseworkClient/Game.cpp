@@ -86,6 +86,7 @@ void Game::update(float dt)
 	applyPing();
 	player2->update(dt);
 	gameFloor->update(dt);
+	collisionDetect();
 	sendPackets();
 }
 
@@ -158,6 +159,77 @@ void Game::pingReciever()
 		}
 	}
 
+void Game::collisionDetect()
+{
+	//get the list of current collisions in the physics world
+	b2Contact* contact = physicsWorld->GetContactList();
+	int contactCount = physicsWorld->GetContactCount();
+
+	//iterate through the list and do collision response accordingly
+	for (int contactIt = 0; contactIt < contactCount; contactIt++)
+	{
+		if (contact->IsTouching())
+		{
+			//grab colliding bodies
+			b2Body* bodyA = contact->GetFixtureA()->GetBody();
+			b2Body* bodyB = contact->GetFixtureB()->GetBody();
+
+			//grab their gameobjects
+			GameObj* objA = (GameObj*)bodyA->GetUserData();
+			GameObj* objB = (GameObj*)bodyB->GetUserData();
+
+			//object pointers to detect what is colliding with what
+			Player* playerPointer = NULL;
+			Floor* floorPointer = NULL;
+			Player2* player2Pointer = NULL;
+
+			if (objA)
+			{
+				switch (objA->getType())
+				{
+				case ObjectType::PLAYER:
+					//if the player is colliding activate the pointer
+					playerPointer = (Player*)bodyA->GetUserData();
+					break;
+				case ObjectType::FLOOR:
+					floorPointer = (Floor*)bodyA->GetUserData();
+					break;
+				case ObjectType::PLAYER2:
+					player2Pointer = (Player2*)bodyA->GetUserData();
+					break;
+				}
+			}
+
+			if (objB)
+			{
+				switch (objB->getType())
+				{
+				case ObjectType::PLAYER:
+					//if the player is colliding activate the pointer
+					playerPointer = (Player*)bodyB->GetUserData();
+					break;
+				case ObjectType::FLOOR:
+					floorPointer = (Floor*)bodyB->GetUserData();
+					break;
+				case ObjectType::PLAYER2:
+					player2Pointer = (Player2*)bodyB->GetUserData();
+					break;
+				}
+			}
+
+			if (playerPointer && floorPointer)
+			{//if the player is currently standing on the ground, allow him to jump
+				playerPointer->inAir = false;
+			}
+
+			if (player2Pointer && floorPointer)
+			{//same with the other player
+				player2Pointer->inAir = false;
+			}
+		}
+	}
+}
+
 
 void Game::applyPing()
 {
@@ -171,7 +243,6 @@ void Game::applyPing()
 			player2->input.pos[0] = latestPing.xPos2;
 			player2->input.pos[1] = latestPing.yPos2;
 			player2->input.dir = true;
-			player2->input.inAir = false;
 			player2->input.newInfo = true;
 			break;
 		case 2:
@@ -179,7 +250,6 @@ void Game::applyPing()
 			player2->input.pos[0] = latestPing.xPos1;
 			player2->input.pos[1] = latestPing.yPos1;
 			player2->input.dir = true;
-			player2->input.inAir = false;
 			player2->input.newInfo = true;
 			break;
 		default:

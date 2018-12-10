@@ -42,6 +42,7 @@ private:
 	void sendPackets();
 	void applyPing();
 	void pingReciever();
+	void collisionDetect();
 	bool needsDone = false;
 
 private:

@@ -23,10 +23,10 @@ void Player2::update(float dt)
 			physicsBody->SetLinearVelocity(b2Vec2(speed, currentVelocity.y));
 			break;
 		case PlayerStates::stationary: //if they were standing still and not in the air make them not move
-			//if (!inAir)
-			//{
+			if (!inAir)
+			{
 				physicsBody->SetLinearVelocity(b2Vec2(0, currentVelocity.y));
-			//}
+			}
 			break;
 		case PlayerStates::movingUp:
 			break;
@@ -46,13 +46,13 @@ void Player2::init(float x, float y)
 
 	//setup player physics body
 	b2BodyDef playerBodyDef;
-	playerBodyDef.type = b2_dynamicBody;
+	playerBodyDef.type = playerBodyDef.type = b2_dynamicBody;
 	playerBodyDef.position = b2Vec2(x, y);
 	physicsBody = physicsWorld->CreateBody(&playerBodyDef);
 
 	//setup the shape of the player
 	b2PolygonShape playerShape;
-	playerShape.SetAsBox(64, 80);
+	playerShape.SetAsBox(objectSprite.getLocalBounds().width / 2, objectSprite.getLocalBounds().height / 2);
 
 	//setup the player fixture
 	b2FixtureDef playerFixture;
@@ -64,7 +64,6 @@ void Player2::init(float x, float y)
 	physicsBody->SetUserData(this);
 
 	input.dir = false;
-	input.inAir = true;
 	input.newInfo = true;
 	input.newState = PlayerStates::stationary;
 	input.pos[0] = 100;

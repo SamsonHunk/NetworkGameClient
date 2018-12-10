@@ -9,10 +9,13 @@ public://function declarations
 	void init(float x, float y);
 
 	PlayerStates getState();
+	ObjectType getType() { return ObjectType::PLAYER; };
+
+	bool inAir;
 
 private:
+	void collisionHandle();
 	int speed = 5;
 	PlayerStates currentState = PlayerStates::stationary;
-	bool inAir;
 	bool left;//true if facing left, false if facing right
 };

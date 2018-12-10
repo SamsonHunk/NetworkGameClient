@@ -17,6 +17,12 @@ void Player::update(float dt)
 		currentState = PlayerStates::stationary;
 	}
 	
+	if (inputManager->getKey(jumpControl))
+	{
+		currentState = PlayerStates::movingUp;
+		inputManager->KeyUp(jumpControl);
+	}
+
 	b2Vec2 currentVelocity = physicsBody->GetLinearVelocity();
 	switch (currentState)
 	{
@@ -29,9 +35,18 @@ void Player::update(float dt)
 	case PlayerStates::stationary:
 		physicsBody->SetLinearVelocity(b2Vec2(0, currentVelocity.y));
 		break;
+	case PlayerStates::movingUp:
+		if (!inAir)
+		{
+			physicsBody->SetLinearVelocity(b2Vec2(currentVelocity.x, -14));
+			inAir = true;
+		}
+		break;
 	default:
 		break;
 	}
+
+	collisionHandle();
 }
 
 void Player::init(float x, float y)
@@ -46,7 +61,7 @@ void Player::init(float x, float y)
 
 	//setup the shape of the player
 	b2PolygonShape playerShape;
-	playerShape.SetAsBox(64, 80);
+	playerShape.SetAsBox(objectSprite.getLocalBounds().width / 2, objectSprite.getLocalBounds().height / 2);
 
 	//setup the player fixture
 	b2FixtureDef playerFixture;
@@ -63,4 +78,9 @@ void Player::init(float x, float y)
 PlayerStates Player::getState()
 {
 	return currentState;
+}
+
+void Player::collisionHandle()
+{
+
 }

@@ -15,7 +15,7 @@ void Floor::init(float x, float y)
 
 	//setup shape
 	b2PolygonShape floorShape;
-	floorShape.SetAsBox(400, 50);
+	floorShape.SetAsBox(objectSprite.getLocalBounds().width, objectSprite.getLocalBounds().height / 2);
 
 	b2FixtureDef floorFixture;
 	floorFixture.shape = &floorShape;

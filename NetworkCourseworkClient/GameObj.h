@@ -21,6 +21,7 @@ public:
 	//virtual functions for the object
 	virtual void update(float dt) = 0;
 	virtual void init(float x, float y) = 0;
+	virtual ObjectType getType() = 0;
 
 protected:
 	b2World* physicsWorld;

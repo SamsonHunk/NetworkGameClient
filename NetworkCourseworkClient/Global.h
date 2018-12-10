@@ -1,6 +1,7 @@
 #ifndef GLOBALVARS
 #define GLOBALVARS
 extern enum class PlayerStates { movingLeft, movingRight, stationary, movingUp, movingDown };
+extern enum class ObjectType {FLOOR, PLAYER, BULLET, PLAYER2};
 
 extern struct playerMoveMessage {
 	int messageType = 2;
@@ -34,6 +35,7 @@ extern struct serverPositionPing
 
 		extern int leftControl = sf::Keyboard::A;
 		extern int rightControl = sf::Keyboard::D;
+		extern int jumpControl = sf::Keyboard::W;
 	}
 
 #endif // !GLOBALVARS
