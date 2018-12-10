@@ -23,18 +23,20 @@ void Player2::update(float dt)
 			physicsBody->SetLinearVelocity(b2Vec2(speed, currentVelocity.y));
 			break;
 		case PlayerStates::stationary: //if they were standing still and not in the air make them not move
-			if (!inAir)
-			{
+			//if (!inAir)
+			//{
 				physicsBody->SetLinearVelocity(b2Vec2(0, currentVelocity.y));
-			}
+			//}
 			break;
 		case PlayerStates::movingUp:
 			break;
 		case PlayerStates::movingDown:
 			break;
 		default:
+			currentState = PlayerStates::stationary;
 			break;
 		}
+		
 	}
 }
 
@@ -60,6 +62,15 @@ void Player2::init(float x, float y)
 	//attach the shape to the physicsbody
 	physicsBody->CreateFixture(&playerFixture);
 	physicsBody->SetUserData(this);
+
+	input.dir = false;
+	input.inAir = true;
+	input.newInfo = true;
+	input.newState = PlayerStates::stationary;
+	input.pos[0] = 100;
+	input.pos[1] = 0;
+	physicsBody->SetLinearVelocity(b2Vec2(0, 0));
+	physicsBody->SetFixedRotation(true);
 }
 
 PlayerStates Player2::getState()

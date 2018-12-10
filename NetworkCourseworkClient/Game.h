@@ -18,7 +18,6 @@ public:
 	void render();
 	void deload();
 	GameState needsChange();
-	void pingReciever();
 
 
 private:
@@ -30,17 +29,23 @@ private:
 	Floor* gameFloor;
 	sf::Texture* playerTexture;
 	sf::Texture* floorTexture;
+	sf::SocketSelector socketHandle;
 
-	std::thread* pingGrabThread;
+	sf::Packet pingPacket;
+	sf::Packet movePacketOut;
+
+	sf::IpAddress ipReciept;
+	unsigned short portReceipt;
+	serverPositionPing packetIn;
 
 	int playerNum;
 	void sendPackets();
 	void applyPing();
+	void pingReciever();
 	bool needsDone = false;
 
 private:
 	//message containers
-	std::mutex messageLock;
 	serverPositionPing latestPing;
 	bool isNew = false;
 };

@@ -56,6 +56,7 @@ void Player::init(float x, float y)
 	//attach the shape to the physicsbody
 	physicsBody->CreateFixture(&playerFixture);
 	physicsBody->SetUserData(this);
+	physicsBody->SetFixedRotation(true);
 }
 
 
