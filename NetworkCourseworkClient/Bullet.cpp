@@ -61,6 +61,7 @@ void Bullet::activate(float x, float y, bool dirIn)
 	physicsBody->SetActive(true);
 	physicsBody->SetTransform(b2Vec2(x, y), 0);
 	dir = dirIn;
+	newBullet = true;
 }
 
 void Bullet::deactivate()

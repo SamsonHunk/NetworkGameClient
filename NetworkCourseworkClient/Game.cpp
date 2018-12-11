@@ -151,6 +151,31 @@ void Game::sendPackets()
 		//when the socket is done, clear the packet
 		movePacketOut.clear();
 	}
+
+	//go through the bullet list and ping the server for any new bullets shot
+	for (int it = 0; it < maxBullets; it++)
+	{
+		if (playerBullets[it]->newBullet)
+		{//if we havent pinged the server about our new bullet yet
+			playerShootPing shootOut;
+			shootOut.dir = playerBullets[it]->dir;
+			shootOut.bulletNum = it;
+			shootOut.playerNum = playerNum;
+			shootOut.posx = playerBullets[it]->getPhysicsBody()->GetPosition().x;
+			shootOut.posy = playerBullets[it]->getPhysicsBody()->GetPosition().y;
+
+			bulletPackets[it] << shootOut.messageType << shootOut.posx << shootOut.posy << shootOut.dir << shootOut.bulletNum << shootOut.playerNum;
+			if (socket->send(bulletPackets[it], serverIp, 7777) != sf::Socket::Done)
+			{
+				//error here
+			}
+			else
+			{
+				bulletPackets[it].clear();
+				playerBullets[it]->newBullet = false;
+			}
+		}
+	}
 }
 
 void Game::pingReciever()

@@ -16,6 +16,8 @@ public:
 
 	void activate(float x, float y, bool dirIn);
 	void deactivate();
+	
+	bool newBullet = false;
 private:
 	int speed = 2;
 	

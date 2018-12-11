@@ -37,6 +37,7 @@ private:
 
 	sf::Packet pingPacket;
 	sf::Packet movePacketOut;
+	sf::Packet bulletPackets[4];
 
 	sf::IpAddress ipReciept;
 	unsigned short portReceipt;
