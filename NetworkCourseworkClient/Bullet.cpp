@@ -2,7 +2,22 @@
 
 void Bullet::update(float dt)
 {
-
+	physicsUpdate();
+	if (physicsBody->GetPosition().x < -5 || physicsBody->GetPosition().x > 1000)
+	{//if the bullet is out of bounds
+		deactivate();
+	}
+	else
+	{
+		if (dir)
+		{
+			physicsBody->SetLinearVelocity(b2Vec2(speed, 0));
+		}
+		else
+		{
+			physicsBody->SetLinearVelocity(b2Vec2(-speed, 0));
+		}
+	}
 }
 
 void Bullet::init(float x, float y)
@@ -26,14 +41,8 @@ void Bullet::init(float x, float y)
 	physicsBody->CreateFixture(&bulletFixture);
 	physicsBody->SetUserData(this);
 
-	if (dir)
-	{
-		physicsBody->SetLinearVelocity(b2Vec2(-speed, 0));
-	}
-	else
-	{
-		physicsBody->SetLinearVelocity(b2Vec2(speed, 0));
-	}
+	awake = false;
+	physicsBody->SetActive(false);
 }
 
 void Bullet::serverAssert(float x, float y)
@@ -45,3 +54,19 @@ ObjectType Bullet::getType()
 {
 	return ObjectType::BULLET;
 }
+
+void Bullet::activate(float x, float y, bool dirIn)
+{//grab the bullet and send it on it's way
+	awake = true;
+	physicsBody->SetActive(true);
+	physicsBody->SetTransform(b2Vec2(x, y), 0);
+	dir = dirIn;
+}
+
+void Bullet::deactivate()
+{
+	awake = false;
+	physicsBody->SetTransform(b2Vec2(0, 0), 0);
+	physicsBody->SetActive(false);
+}
+

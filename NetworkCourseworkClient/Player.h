@@ -13,9 +13,13 @@ public://function declarations
 
 	bool inAir;
 
+	bool getShooting() { return isShooting; };
+	bool getDir() { return left; }
+
 private:
 	void collisionHandle();
 	int speed = 5;
 	PlayerStates currentState = PlayerStates::stationary;
 	bool left;//true if facing left, false if facing right
+	bool isShooting;
 };

@@ -13,6 +13,10 @@ public:
 
 	bool dir; //true for left, false for right
 	bool awake = false;
+
+	void activate(float x, float y, bool dirIn);
+	void deactivate();
 private:
 	int speed = 2;
+	
 };

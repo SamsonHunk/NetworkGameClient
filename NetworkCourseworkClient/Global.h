@@ -29,6 +29,25 @@ extern struct serverPositionPing
 	int player2State;
 };
 
+extern struct playerShootPing
+{
+	int messageType = 5;
+	float posx;
+	float posy;
+	bool dir;
+	int bulletNum;
+	int playerNum;
+};
+
+extern struct serverBulletPing
+{//maximum bullets in the scene will be 8, 4 for each player
+	int messageType = 4;
+	float posx[4];
+	float posy[4];
+	bool awake[4];
+	bool dir[4];
+};
+
 	extern enum  GameState { Menu, GameENUM, NoChange }; //enumerator for the current game state
 	namespace GLOBALVARS {
 		//enum for current playerstate
@@ -36,7 +55,10 @@ extern struct serverPositionPing
 		extern int leftControl = sf::Keyboard::A;
 		extern int rightControl = sf::Keyboard::D;
 		extern int jumpControl = sf::Keyboard::W;
+		extern int shootControl = sf::Keyboard::Space;
+		extern int crouchControl = sf::Keyboard::S;
+		extern int maxBullets = 4;
 	}
-
+	
 #endif // !GLOBALVARS
 //file to store project wide data containers

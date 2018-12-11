@@ -27,10 +27,12 @@ void Game::init(sf::RenderWindow * windowIn, Input * in, sf::UdpSocket * socketI
 	floor.setSize(sf::Vector2f(400, 50));
 	playerTexture = new sf::Texture();
 	floorTexture = new sf::Texture();
+	bulletTexture = new sf::Texture();
 
 	playerTexture->loadFromFile("image/player.png");
 	floorTexture->loadFromFile("image/floor.png");
-	
+	bulletTexture->loadFromFile("image/bullet.png");
+
 	serverIp = sf::IpAddress("127.0.0.1");
 	connectionMessage packetOut;
 	packetOut.clientIp = sf::IpAddress::LocalHost.toString();
@@ -75,6 +77,15 @@ void Game::init(sf::RenderWindow * windowIn, Input * in, sf::UdpSocket * socketI
 	player2 = new Player2(physicsWorld, playerTexture, input, windowIn);
 	player2->init(600, 0);
 
+	//initialise bullets lists
+	for (int it = 0; it < maxBullets; it++)
+	{
+		playerBullets[it] = new Bullet(physicsWorld, bulletTexture, input, windowIn);
+		playerBullets[it]->init(0, 0);
+		enemyBullets[it] = new Bullet(physicsWorld, bulletTexture, input, windowIn);
+		playerBullets[it]->init(0, 0);
+	}
+
 	socket->setBlocking(false);
 }
 
@@ -82,6 +93,7 @@ void Game::update(float dt)
 {//update game logic
 	physicsWorld->Step(0.06f, 6, 2);
 	player->update(dt);
+	bulletShoot();
 	pingReciever();
 	applyPing();
 	player2->update(dt);
@@ -96,6 +108,18 @@ void Game::render()
 	gameFloor->render();
 	player->render();
 	player2->render();
+	for (int it = 0; it < maxBullets; it++)
+	{//only render bullets currently being used
+		if (playerBullets[it]->awake)
+		{
+			playerBullets[it]->render();
+		}
+
+		if (enemyBullets[it]->awake)
+		{
+			enemyBullets[it]->render();
+		}
+	}
 }
 
 void Game::deload()
@@ -137,7 +161,6 @@ void Game::pingReciever()
 		if (socket->receive(pingPacket, ipReciept, portReceipt) != sf::Socket::Done)
 		{
 			//
-			int debug = 0;
 		}
 		else
 		{//grab the message
@@ -182,6 +205,7 @@ void Game::collisionDetect()
 			Player* playerPointer = NULL;
 			Floor* floorPointer = NULL;
 			Player2* player2Pointer = NULL;
+			Bullet* bulletPointer = NULL;
 
 			if (objA)
 			{
@@ -196,6 +220,8 @@ void Game::collisionDetect()
 					break;
 				case ObjectType::PLAYER2:
 					player2Pointer = (Player2*)bodyA->GetUserData();
+				case ObjectType::BULLET:
+					bulletPointer = (Bullet*)bodyA->GetUserData();
 					break;
 				}
 			}
@@ -214,6 +240,9 @@ void Game::collisionDetect()
 				case ObjectType::PLAYER2:
 					player2Pointer = (Player2*)bodyB->GetUserData();
 					break;
+				case ObjectType::BULLET:
+					bulletPointer = (Bullet*)bodyB->GetUserData();
+					break;
 				}
 			}
 
@@ -221,11 +250,54 @@ void Game::collisionDetect()
 			{//if the player is currently standing on the ground, allow him to jump
 				playerPointer->inAir = false;
 			}
-
-			if (player2Pointer && floorPointer)
+			else if (player2Pointer && floorPointer)
 			{//same with the other player
 				player2Pointer->inAir = false;
 			}
+			else if (bulletPointer && player2Pointer)
+			{
+				bulletPointer->deactivate();
+			}
+		}
+	}
+}
+
+void Game::bulletShoot()
+{
+	if (player->getShooting())
+	{// if the player is currently shooting, check if we can add another bullet to the pile
+		bool found = false;
+		int it = 0;
+		while (!(found || it == maxBullets))
+		{//if there is an empty slot on the bullet array shoot out a new bullet
+			if (!playerBullets[it]->awake)
+			{
+				//shoot left or right depending which way the player is moving
+				if (player->getDir())
+				{
+					playerBullets[it]->activate(player->getPhysicsBody()->GetPosition().x + 50, player->getPhysicsBody()->GetPosition().y, true);
+				}
+				else
+				{
+					playerBullets[it]->activate(player->getPhysicsBody()->GetPosition().x - 50, player->getPhysicsBody()->GetPosition().y, false);
+				}
+				found = true;
+			}
+			it++;
+		}
+	}
+
+	//update the bullets
+	for (int it = 0; it < 4; it++)
+	{
+		if (playerBullets[it]->awake)
+		{
+			playerBullets[it]->update(1);
+		}
+
+		if (enemyBullets[it]->awake)
+		{
+			enemyBullets[it]->update(1);
 		}
 	}
 }

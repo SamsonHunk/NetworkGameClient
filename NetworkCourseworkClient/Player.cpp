@@ -4,6 +4,8 @@ void Player::update(float dt)
 {
 	physicsUpdate();
 
+	//player control
+
 	if (inputManager->getKey(leftControl))
 	{
 		currentState = PlayerStates::movingLeft;
@@ -23,14 +25,26 @@ void Player::update(float dt)
 		inputManager->KeyUp(jumpControl);
 	}
 
+	if (inputManager->getKey(shootControl))
+	{
+		inputManager->KeyUp(shootControl);
+		isShooting = true;
+	}
+	else
+	{
+		isShooting = false;
+	}
+
 	b2Vec2 currentVelocity = physicsBody->GetLinearVelocity();
 	switch (currentState)
 	{
 	case PlayerStates::movingLeft:
 		physicsBody->SetLinearVelocity(b2Vec2(-speed, currentVelocity.y));
+		left = false;
 		break;
 	case PlayerStates::movingRight:
 		physicsBody->SetLinearVelocity(b2Vec2(speed, currentVelocity.y));
+		left = true;
 		break;
 	case PlayerStates::stationary:
 		physicsBody->SetLinearVelocity(b2Vec2(0, currentVelocity.y));

@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Player2.h"
 #include "Floor.h"
+#include "Bullet.h"
 #include <list>
 #include <mutex>
 
@@ -27,8 +28,11 @@ private:
 	Player* player;
 	Player2* player2;
 	Floor* gameFloor;
+	Bullet* playerBullets[4];
+	Bullet* enemyBullets[4];
 	sf::Texture* playerTexture;
 	sf::Texture* floorTexture;
+	sf::Texture* bulletTexture;
 	sf::SocketSelector socketHandle;
 
 	sf::Packet pingPacket;
@@ -43,10 +47,13 @@ private:
 	void applyPing();
 	void pingReciever();
 	void collisionDetect();
+	void bulletShoot();
 	bool needsDone = false;
 
+	
 private:
 	//message containers
 	serverPositionPing latestPing;
+	serverBulletPing latestBullet;
 	bool isNew = false;
 };
