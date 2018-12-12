@@ -62,7 +62,8 @@ extern struct serverBulletPing
 		extern int rightControl = sf::Keyboard::D;
 		extern int jumpControl = sf::Keyboard::W;
 		extern int shootControl = sf::Keyboard::Space;
-		extern int crouchControl = sf::Keyboard::S;
+		extern int crouchControl = sf::Keyboard::S; //Didn't get to implement, ran out of time ;-;
+		extern int lagToggleControl = sf::Keyboard::L;
 		extern int maxBullets = 4;
 
 		extern unsigned short serverPort = 7777;

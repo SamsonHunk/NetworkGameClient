@@ -2,70 +2,72 @@
 
 void Player2::update(float dt)
 {
-	//first determine if we have updated server info
-	if (input.newInfo)
-	{//if yes update the object variables with the server info
-		//physicsBody->SetTransform(b2Vec2(input.pos[0], input.pos[1]), 0);
-		serverPos = b2Vec2(input.pos[0], input.pos[1]);
-		rubberBandSpeed = b2Distance(physicsBody->GetPosition(), serverPos) / 10;
-		physicsBody->SetLinearDamping(1 / rubberBandSpeed);
-		physicsBody->SetTransform(b2Vec2(input.pos[0], physicsBody->GetPosition().y), 0);
-		currentState = input.newState;
-		input.newInfo = false;
+	if (inputManager->getKey(lagToggleControl))
+	{//if the player pressed L toggle the prediction algorithm
+		inputManager->KeyUp(lagToggleControl);
+		prediction = !prediction;
 	}
-	else
-	{//else we start some predicting
-		b2Vec2 currentVelocity = physicsBody->GetLinearVelocity();
-
-		switch (currentState)
-		{
-		case PlayerStates::movingLeft: //if they were moving left, they continue
-			physicsBody->SetLinearVelocity(b2Vec2(-speed, currentVelocity.y));
-			break;
-		case PlayerStates::movingRight: //ditto
-			physicsBody->SetLinearVelocity(b2Vec2(speed, currentVelocity.y));
-			break;
-		case PlayerStates::stationary: //if they were standing still and not in the air make them not move
-		
-			break;
-		case PlayerStates::movingUp:
-			physicsBody->SetLinearVelocity(b2Vec2(currentVelocity.x, input.yVel));
-			break;
-		case PlayerStates::movingDown:
-			break;
-		default:
-			currentState = PlayerStates::stationary;
-			break;
-		}
 	
-		
+	if (prediction) //if prediction is turned on, predict
+	{
+		//first determine if we have updated server info
+		if (input.newInfo)
+		{//if yes update the object variables with the server info
+			//physicsBody->SetTransform(b2Vec2(input.pos[0], input.pos[1]), 0);
+			serverPos = b2Vec2(input.pos[0], input.pos[1]);
+			rubberBandSpeed = b2Distance(physicsBody->GetPosition(), serverPos) / 10;
+			physicsBody->SetLinearDamping(1 / rubberBandSpeed);
+			physicsBody->SetTransform(b2Vec2(input.pos[0], physicsBody->GetPosition().y), 0);
+			currentState = input.newState;
+			input.newInfo = false;
+		}
+		else
+		{//else we start some predicting
+			b2Vec2 currentVelocity = physicsBody->GetLinearVelocity();
 
-		
-		
+			switch (currentState)
+			{
+			case PlayerStates::movingLeft: //if they were moving left, they continue
+				physicsBody->SetLinearVelocity(b2Vec2(-speed, currentVelocity.y));
+				break;
+			case PlayerStates::movingRight: //ditto
+				physicsBody->SetLinearVelocity(b2Vec2(speed, currentVelocity.y));
+				break;
+			case PlayerStates::stationary: //if they were standing still and not in the air make them not move
 
-		/*
-		if (xDistance != 0)
+				break;
+			case PlayerStates::movingUp:
+				physicsBody->SetLinearVelocity(b2Vec2(currentVelocity.x, input.yVel));
+				break;
+			case PlayerStates::movingDown:
+				break;
+			default:
+				currentState = PlayerStates::stationary;
+				break;
+			}
+		}
+
+
+
+
+		b2Vec2 currentPos = physicsBody->GetPosition();
+		float yDistance = serverPos.y - currentPos.y;
+		float xDistance = serverPos.x - currentPos.y;
+		//rubber band movement smoothing on both the x and y axis
+		if (yDistance != 0)
 		{
 			//now we know what direction we are going in, interpolate a bit to the latest server position
 			physicsBody->ApplyLinearImpulseToCenter(b2Vec2(0, yDistance * rubberBandSpeed), true);
 		}
-		*/
+		if (yDistance > 700)
+		{
+			physicsBody->SetTransform(b2Vec2(currentPos.x, serverPos.y), 0);
+		}
 	}
-
-	b2Vec2 currentPos = physicsBody->GetPosition();
-	float yDistance = serverPos.y - currentPos.y;
-	float xDistance = serverPos.x - currentPos.y;
-	//rubber band movement smoothing on both the x and y axis
-	if (yDistance != 0)
-	{
-		//now we know what direction we are going in, interpolate a bit to the latest server position
-		physicsBody->ApplyLinearImpulseToCenter(b2Vec2(0, yDistance * rubberBandSpeed), true);
+	else
+	{//otherwise just set position to the last server message
+		physicsBody->SetTransform(b2Vec2(input.pos[0], input.pos[1]), 0);
 	}
-	if (yDistance > 700)
-	{
-		physicsBody->SetTransform(b2Vec2(currentPos.x, serverPos.y), 0);
-	}
-
 	physicsUpdate();
 
 }
