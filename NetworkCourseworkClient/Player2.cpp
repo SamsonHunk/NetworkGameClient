@@ -22,13 +22,14 @@ void Player2::update(float dt)
 		case PlayerStates::movingRight: //ditto
 			physicsBody->SetLinearVelocity(b2Vec2(speed, currentVelocity.y));
 			break;
-		case PlayerStates::stationary: //if they were standing still and not in the air make them not move
+		/*case PlayerStates::stationary: //if they were standing still and not in the air make them not move
 			if (!inAir)
 			{
 				physicsBody->SetLinearVelocity(b2Vec2(0, currentVelocity.y));
 			}
-			break;
+			break; */
 		case PlayerStates::movingUp:
+			physicsBody->SetLinearVelocity(b2Vec2(currentVelocity.x, input.yVel));
 			break;
 		case PlayerStates::movingDown:
 			break;

@@ -143,9 +143,10 @@ void Game::sendPackets()
 	packetOut.stateMessage = static_cast<int>(player->getState());
 	packetOut.xPos = player->getPhysicsBody()->GetPosition().x;
 	packetOut.yPos = player->getPhysicsBody()->GetPosition().y;
+	packetOut.yVel = player->getPhysicsBody()->GetLinearVelocity().y;
 	packetOut.playerNum = playerNum;
 	//shove data into packet
-	movePacketOut << packetOut.messageType << packetOut.stateMessage << packetOut.xPos << packetOut.yPos << packetOut.playerNum;
+	movePacketOut << packetOut.messageType << packetOut.stateMessage << packetOut.xPos << packetOut.yPos << packetOut.playerNum << packetOut.yVel;
 	if (socket->send(movePacketOut, ipOut, serverPort) != sf::Socket::Done)
 	{
 		//error here
@@ -189,7 +190,7 @@ void Game::sendPackets()
 }
 
 void Game::pingReciever()
-{//function to wait for the next server ping this will wait on it's own thread until it recieves input
+{//function to wait for the next server ping this will wait  until it recieves input
 	
 
 
@@ -205,7 +206,7 @@ void Game::pingReciever()
 			{
 			case 3:
 				//grab packet and store it into the message stack
-				pingPacket >> packetIn.xPos1 >> packetIn.yPos1 >> packetIn.player1State >> packetIn.xPos2 >> packetIn.yPos2 >> packetIn.player2State;
+				pingPacket >> packetIn.xPos1 >> packetIn.yPos1 >> packetIn.player1State >> packetIn.xPos2 >> packetIn.yPos2 >> packetIn.player2State >> packetIn.yVel1 >> packetIn.yVel2;
 				latestPing = packetIn;
 				isNew = true;
 				pingPacket.clear();
@@ -385,6 +386,7 @@ void Game::applyPing()
 			player2->input.pos[1] = latestPing.yPos2;
 			player2->input.dir = true;
 			player2->input.newInfo = true;
+			player2->input.yVel = latestPing.yVel2;
 			break;
 		case 2:
 			player2->input.newState = static_cast<PlayerStates>(latestPing.player1State);
@@ -392,6 +394,7 @@ void Game::applyPing()
 			player2->input.pos[1] = latestPing.yPos1;
 			player2->input.dir = true;
 			player2->input.newInfo = true;
+			player2->input.yVel = latestPing.yVel1;
 			break;
 		default:
 			break;

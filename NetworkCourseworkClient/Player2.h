@@ -10,6 +10,7 @@ public:
 		PlayerStates newState;
 		bool dir;
 		bool newInfo;
+		float yVel;
 	};
 
 	using GameObj::GameObj;
