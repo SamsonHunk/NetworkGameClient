@@ -7,13 +7,12 @@
 #include <thread>
 #include <mutex>
 
-//using  GLOBALVARS::PlayerStates;
 
 class State //parent gamestate class, purely virtual
 {
 public:
 	//all the shared virtual functions
-	virtual void init(sf::RenderWindow* windowIn, Input* in, sf::UdpSocket* socketIn) = 0; 
+	virtual void init(sf::RenderWindow* windowIn, Input* in, sf::UdpSocket* socketIn, std::string serverIpIn, std::string clientIn) = 0;
 	virtual void update(float dt) = 0;
 	virtual void render() = 0;
 	virtual void deload() = 0;

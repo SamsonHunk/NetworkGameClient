@@ -9,18 +9,22 @@ Game::~Game()
 {
 }
 
-void Game::init(sf::RenderWindow * windowIn, Input * in, sf::UdpSocket * socketIn)
+void Game::init(sf::RenderWindow * windowIn, Input * in, sf::UdpSocket * socketIn, std::string serverIpIn, std::string clientIn)
 {
 	window = windowIn;
 	input = in;
 	socket = socketIn;
+
+	serverIp = serverIpIn;
+	clientIPAddress = clientIn;
 
 	unsigned short clientPort = socket->getLocalPort();
 
 	//initialise gameworld gravity
 	physicsWorld = new b2World(b2Vec2(0, .5));
 	
-	ipOut = sf::IpAddress(GLOBALVARS::serverIp);
+	ipOut = sf::IpAddress(serverIp);
+	
 
 	//setup stage floor
 	floor.setPosition(200, 400);
@@ -35,7 +39,7 @@ void Game::init(sf::RenderWindow * windowIn, Input * in, sf::UdpSocket * socketI
 	bulletTexture->loadFromFile("image/bullet.png");
 
 	connectionMessage packetOut;
-	packetOut.clientIp = GLOBALVARS::clientIPAddress;
+	packetOut.clientIp = clientIPAddress;
 	packetOut.port = clientPort;
 	packetOut.messageType = 1;
 
@@ -46,7 +50,7 @@ void Game::init(sf::RenderWindow * windowIn, Input * in, sf::UdpSocket * socketI
 	socket->setBlocking(true);
 	sf::Packet outPacket;
 	outPacket << packetOut.messageType << packetOut.clientIp << packetOut.port;
-	if (socket->send(outPacket, ipOut, serverPort) != sf::Socket::Done) //connect to server
+	if (socket->send(outPacket, ipOut, 7777) != sf::Socket::Done) //connect to server
 	{
 
 	}

@@ -9,11 +9,12 @@
 
 // The IP address of the server
 
+
 int main()
 {
-	GLOBALVARS;
+	std::string serverIp;
+	std::string clientIp;
 	Input input; //Input manager for keyboard
-	State* currentState = nullptr; //pointer for the current game state
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Simple Snap Brother"); //initialise game window
 	float deltaTime; //delta time for accurate movement between frames
 	sf::Clock clock; //clock to time deltatime
@@ -41,8 +42,9 @@ int main()
 		}
 		else
 		{
-			std::cout << "Client ip: " << sf::IpAddress::getLocalAddress().LocalHost.toString() << " " << port << std::endl;
-			GLOBALVARS::serverIp = sf::IpAddress::LocalHost.toString();
+			clientIp = sf::IpAddress::getLocalAddress().LocalHost.toString();
+			std::cout << "Client ip: " << clientIp << " " << port << std::endl;
+			serverIp = sf::IpAddress::LocalHost.toString();
 		}
 		break;
 	case 2:
@@ -53,17 +55,21 @@ int main()
 		else
 		{
 			std::string input;
-			std::cout << "Client ip: " << sf::IpAddress::getLocalAddress().toString() << " " << port << std::endl;
+			clientIp = sf::IpAddress::getLocalAddress().toString();
+			std::cout << "Client ip: " << clientIp << " " << port << std::endl;
 			std::cout << "Server ip: " << std::endl;
-			std::cin >> GLOBALVARS::serverIp;
+			std::cin >> serverIp;
 			std::cout << "Connecting to " << serverIp << " on port: " << serverPort << std::endl;
 		}
 		break;
 	default:
 		break;
 	}
+	
+	State* currentState = nullptr; //pointer for the current game state
+
 	currentState = new Game;
-	currentState->init(&window, &input, &socket);
+	currentState->init(&window, &input, &socket, serverIp, clientIp);
 
 	while (window.isOpen())
 	{

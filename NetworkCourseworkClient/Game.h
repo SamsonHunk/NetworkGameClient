@@ -14,7 +14,7 @@ public:
 	Game();
 	~Game();
 
-	void init(sf::RenderWindow* windowIn, Input* in, sf::UdpSocket* socketIn);
+	void init(sf::RenderWindow* windowIn, Input* in, sf::UdpSocket* socketIn, std::string serverIpIn, std::string clientIn);
 	void update(float dt);
 	void render();
 	void deload();
@@ -52,7 +52,8 @@ private:
 	serverBulletPing bulletPacketUnpack(sf::Packet *in);
 	bool needsDone = false;
 
-	
+	std::string serverIp;
+	std::string clientIPAddress;
 private:
 	//message containers
 	serverPositionPing latestPing;
