@@ -8,17 +8,16 @@
 #include <iostream>
 
 // The IP address of the server
-#define SERVERIP "127.0.0.1"
 
 int main()
 {
+	GLOBALVARS;
 	Input input; //Input manager for keyboard
 	State* currentState = nullptr; //pointer for the current game state
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Simple Snap Brother"); //initialise game window
 	float deltaTime; //delta time for accurate movement between frames
 	sf::Clock clock; //clock to time deltatime
 	sf::UdpSocket socket; //UDP socket for communicating with the server
-	
 
 	unsigned short port = 5400;
 	int playerNUM;
@@ -40,12 +39,24 @@ int main()
 		{//if server connect fails
 			return 1;
 		}
+		else
+		{
+			std::cout << "Client ip: " << sf::IpAddress::getLocalAddress().LocalHost.toString() << " " << port << std::endl;
+			GLOBALVARS::serverIp = sf::IpAddress::LocalHost.toString();
+		}
 		break;
 	case 2:
 		if (socket.bind(port, sf::IpAddress::getLocalAddress()) != socket.Done)
 		{//if server connect fails
-			std::cout << "Client ip: " << sf::IpAddress::getLocalAddress().toString() << std::endl;
 			return 1;
+		}
+		else
+		{
+			std::string input;
+			std::cout << "Client ip: " << sf::IpAddress::getLocalAddress().toString() << " " << port << std::endl;
+			std::cout << "Server ip: " << std::endl;
+			std::cin >> GLOBALVARS::serverIp;
+			std::cout << "Connecting to " << serverIp << " on port: " << serverPort << std::endl;
 		}
 		break;
 	default:

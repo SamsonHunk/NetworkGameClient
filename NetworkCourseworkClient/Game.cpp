@@ -15,12 +15,13 @@ void Game::init(sf::RenderWindow * windowIn, Input * in, sf::UdpSocket * socketI
 	input = in;
 	socket = socketIn;
 
-	unsigned short serverPort = 7777;
 	unsigned short clientPort = socket->getLocalPort();
 
 	//initialise gameworld gravity
 	physicsWorld = new b2World(b2Vec2(0, .5));
 	
+	ipOut = sf::IpAddress(GLOBALVARS::serverIp);
+
 	//setup stage floor
 	floor.setPosition(200, 400);
 	floor.setFillColor(sf::Color::Red);
@@ -33,9 +34,8 @@ void Game::init(sf::RenderWindow * windowIn, Input * in, sf::UdpSocket * socketI
 	floorTexture->loadFromFile("image/floor.png");
 	bulletTexture->loadFromFile("image/bullet.png");
 
-	serverIp = sf::IpAddress("127.0.0.1");
 	connectionMessage packetOut;
-	packetOut.clientIp = sf::IpAddress::LocalHost.toString();
+	packetOut.clientIp = GLOBALVARS::clientIPAddress;
 	packetOut.port = clientPort;
 	packetOut.messageType = 1;
 
@@ -46,7 +46,7 @@ void Game::init(sf::RenderWindow * windowIn, Input * in, sf::UdpSocket * socketI
 	socket->setBlocking(true);
 	sf::Packet outPacket;
 	outPacket << packetOut.messageType << packetOut.clientIp << packetOut.port;
-	if (socket->send(outPacket, serverIp, 7777) != sf::Socket::Done) //connect to server
+	if (socket->send(outPacket, ipOut, serverPort) != sf::Socket::Done) //connect to server
 	{
 
 	}
@@ -142,7 +142,7 @@ void Game::sendPackets()
 	packetOut.playerNum = playerNum;
 	//shove data into packet
 	movePacketOut << packetOut.messageType << packetOut.stateMessage << packetOut.xPos << packetOut.yPos << packetOut.playerNum;
-	if (socket->send(movePacketOut, serverIp, 7777) != sf::Socket::Done)
+	if (socket->send(movePacketOut, ipOut, serverPort) != sf::Socket::Done)
 	{
 		//error here
 	}
@@ -166,7 +166,7 @@ void Game::sendPackets()
 			debug++;
 			bulletPackets[it] << shootOut.messageType << shootOut.posx << shootOut.posy << shootOut.dir << shootOut.bulletNum << shootOut.playerNum;
 			socket->setBlocking(true);
-			if (socket->send(bulletPackets[it], serverIp, 7777) != sf::Socket::Done)
+			if (socket->send(bulletPackets[it], ipOut, serverPort) != sf::Socket::Done)
 			{
 				//error here
 			}

@@ -22,8 +22,8 @@ public:
 	
 
 private:
+	sf::IpAddress ipOut = sf::IpAddress::getLocalAddress();
 	sf::RectangleShape floor;
-	sf::IpAddress serverIp;
 	b2World* physicsWorld;
 	Player* player;
 	Player2* player2;

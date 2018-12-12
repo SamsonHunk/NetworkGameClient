@@ -49,6 +49,8 @@ extern struct serverBulletPing
 	bool dir[4];
 };
 
+
+
 	extern enum  GameState { Menu, GameENUM, NoChange }; //enumerator for the current game state
 	namespace GLOBALVARS {
 		//enum for current playerstate
@@ -59,6 +61,11 @@ extern struct serverBulletPing
 		extern int shootControl = sf::Keyboard::Space;
 		extern int crouchControl = sf::Keyboard::S;
 		extern int maxBullets = 4;
+
+		extern unsigned short serverPort = 7777;
+		extern std::string serverIp = " ";
+		extern std::string clientIPAddress = " ";
+
 	}
 	
 #endif // !GLOBALVARS
