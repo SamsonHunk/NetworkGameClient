@@ -96,11 +96,11 @@ void Game::init(sf::RenderWindow * windowIn, Input * in, sf::UdpSocket * socketI
 void Game::update(float dt)
 {//update game logic
 	physicsWorld->Step(0.06f, 6, 2);
-	player->update(dt);
-	bulletShoot();
 	pingReciever();
 	applyPing();
+	player->update(dt);
 	player2->update(dt);
+	bulletShoot();
 	gameFloor->update(dt);
 	collisionDetect();
 	sendPackets();

@@ -28,6 +28,10 @@ private:
 	int speed = 5;
 	PlayerStates currentState = PlayerStates::stationary;
 	bool left;//true if facing left, false if facing right	
+	b2Vec2 serverPos;
+	float rubberBandSpeed;
+	b2Vec2 rubberBandDirection;
+	bool prediction = true; // variable to turn prediction on/off
 };
 
 /*
