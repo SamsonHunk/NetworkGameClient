@@ -9,7 +9,7 @@ void Player2::update(float dt)
 		serverPos = b2Vec2(input.pos[0], input.pos[1]);
 		rubberBandSpeed = b2Distance(physicsBody->GetPosition(), serverPos) / 10;
 		physicsBody->SetLinearDamping(1 / rubberBandSpeed);
-		//physicsBody->SetTransform(b2Vec2(input.pos[0], physicsBody->GetPosition().y), 0);
+		physicsBody->SetTransform(b2Vec2(input.pos[0], physicsBody->GetPosition().y), 0);
 		currentState = input.newState;
 		input.newInfo = false;
 	}
@@ -66,15 +66,6 @@ void Player2::update(float dt)
 		physicsBody->SetTransform(b2Vec2(currentPos.x, serverPos.y), 0);
 	}
 
-
-	if (xDistance != 0)
-	{
-		physicsBody->ApplyLinearImpulseToCenter(b2Vec2(speed / xDistance, 0), true);
-	}
-	if (xDistance > 200)
-	{
-		physicsBody->SetTransform(b2Vec2(serverPos.x, currentPos.y), 0);
-	}
 	physicsUpdate();
 
 }
