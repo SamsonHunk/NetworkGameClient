@@ -16,7 +16,7 @@ void Game::init(sf::RenderWindow * windowIn, Input * in, sf::UdpSocket * socketI
 	socket = socketIn;
 
 	unsigned short serverPort = 7777;
-	unsigned short clientPort = 5400;
+	unsigned short clientPort = socket->getLocalPort();
 
 	//initialise gameworld gravity
 	physicsWorld = new b2World(b2Vec2(0, .5));
@@ -83,7 +83,7 @@ void Game::init(sf::RenderWindow * windowIn, Input * in, sf::UdpSocket * socketI
 		playerBullets[it] = new Bullet(physicsWorld, bulletTexture, input, windowIn);
 		playerBullets[it]->init(0, 0);
 		enemyBullets[it] = new Bullet(physicsWorld, bulletTexture, input, windowIn);
-		playerBullets[it]->init(0, 0);
+		enemyBullets[it]->init(0, 0);
 	}
 
 	socket->setBlocking(false);
@@ -151,7 +151,7 @@ void Game::sendPackets()
 		//when the socket is done, clear the packet
 		movePacketOut.clear();
 	}
-
+	int debug = 0;
 	//go through the bullet list and ping the server for any new bullets shot
 	for (int it = 0; it < maxBullets; it++)
 	{
@@ -163,8 +163,9 @@ void Game::sendPackets()
 			shootOut.playerNum = playerNum;
 			shootOut.posx = playerBullets[it]->getPhysicsBody()->GetPosition().x;
 			shootOut.posy = playerBullets[it]->getPhysicsBody()->GetPosition().y;
-
+			debug++;
 			bulletPackets[it] << shootOut.messageType << shootOut.posx << shootOut.posy << shootOut.dir << shootOut.bulletNum << shootOut.playerNum;
+			socket->setBlocking(true);
 			if (socket->send(bulletPackets[it], serverIp, 7777) != sf::Socket::Done)
 			{
 				//error here
@@ -175,7 +176,12 @@ void Game::sendPackets()
 				playerBullets[it]->newBullet = false;
 			}
 		}
+		if (debug > 2)
+		{
+			int deee;
+		}
 	}
+	socket->setBlocking(false);
 }
 
 void Game::pingReciever()
@@ -200,7 +206,12 @@ void Game::pingReciever()
 				isNew = true;
 				pingPacket.clear();
 				break;
-
+			case 4:
+				//grab ping and update player 2 bullets
+				latestBullet = bulletPacketUnpack(&pingPacket);
+				newBullet = true;
+				pingPacket.clear();
+				break;
 			default:
 				break;
 			}
@@ -283,6 +294,10 @@ void Game::collisionDetect()
 			{
 				bulletPointer->deactivate();
 			}
+			else if (bulletPointer && playerPointer)
+			{//if the player is hit with a bullet
+
+			}
 		}
 	}
 }
@@ -300,11 +315,11 @@ void Game::bulletShoot()
 				//shoot left or right depending which way the player is moving
 				if (player->getDir())
 				{
-					playerBullets[it]->activate(player->getPhysicsBody()->GetPosition().x + 50, player->getPhysicsBody()->GetPosition().y, true);
+					playerBullets[it]->activate(player->getPhysicsBody()->GetPosition().x + 100, player->getPhysicsBody()->GetPosition().y, true);
 				}
 				else
 				{
-					playerBullets[it]->activate(player->getPhysicsBody()->GetPosition().x - 50, player->getPhysicsBody()->GetPosition().y, false);
+					playerBullets[it]->activate(player->getPhysicsBody()->GetPosition().x - 100, player->getPhysicsBody()->GetPosition().y, false);
 				}
 				found = true;
 			}
@@ -313,7 +328,7 @@ void Game::bulletShoot()
 	}
 
 	//update the bullets
-	for (int it = 0; it < 4; it++)
+	for (int it = 0; it < maxBullets; it++)
 	{
 		if (playerBullets[it]->awake)
 		{
@@ -325,6 +340,31 @@ void Game::bulletShoot()
 			enemyBullets[it]->update(1);
 		}
 	}
+}
+
+serverBulletPing Game::bulletPacketUnpack(sf::Packet * in)
+{
+	serverBulletPing output;
+	sf::Packet input = *in;
+
+	for (int it = 0; it < maxBullets; it++)
+	{
+		input >> output.posx[it];
+	}
+	for (int it = 0; it < maxBullets; it++)
+	{
+		input >> output.posy[it];
+	}
+	for (int it = 0; it < maxBullets; it++)
+	{
+		input >> output.awake[it];
+	}
+	for (int it = 0; it < maxBullets; it++)
+	{
+		input >> output.dir[it];
+	}
+
+	return output;
 }
 
 
@@ -354,4 +394,22 @@ void Game::applyPing()
 		}
 		isNew = false;
 	}
+	int count = 0;
+	if (newBullet)
+	{
+		for (int it = 0; it < maxBullets; it++)
+		{
+			if (latestBullet.awake[it])
+			{
+   				enemyBullets[it]->activate(latestBullet.posx[it], latestBullet.posy[it], latestBullet.dir[it]);
+				count++;
+			}
+		}
+		if (count > 3)
+		{
+			int debug;
+		}
+		newBullet = false;
+	}
 }
+

@@ -19,7 +19,7 @@ public:
 	void render();
 	void deload();
 	GameState needsChange();
-
+	
 
 private:
 	sf::RectangleShape floor;
@@ -49,6 +49,7 @@ private:
 	void pingReciever();
 	void collisionDetect();
 	void bulletShoot();
+	serverBulletPing bulletPacketUnpack(sf::Packet *in);
 	bool needsDone = false;
 
 	
@@ -57,4 +58,5 @@ private:
 	serverPositionPing latestPing;
 	serverBulletPing latestBullet;
 	bool isNew = false;
+	bool newBullet = false;
 };

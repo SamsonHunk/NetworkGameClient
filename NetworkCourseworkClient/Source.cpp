@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "Global.h"
 #include "Game.h"
+#include <iostream>
 
 // The IP address of the server
 #define SERVERIP "127.0.0.1"
@@ -17,15 +18,41 @@ int main()
 	float deltaTime; //delta time for accurate movement between frames
 	sf::Clock clock; //clock to time deltatime
 	sf::UdpSocket socket; //UDP socket for communicating with the server
-	currentState = new Game;
-	currentState->init(&window, &input, &socket);
+	
 
 	unsigned short port = 5400;
+	int playerNUM;
+	std::cout << "Player 1 or player 2? (1 or 2)" << std::endl;
+	std::cin >> playerNUM;
 
-	if (socket.bind(port, "127.0.0.1") != socket.Done)
-	{//if server connect fails
-		return 1;
+	if (playerNUM == 1)
+	{
+		port = 5410;
 	}
+ 
+	std::cout << "Localhost or LAN? (1 or 2)" << std::endl;
+	std::cin >> playerNUM;
+
+	switch (playerNUM)
+	{
+	case 1:
+		if (socket.bind(port, "127.0.0.1") != socket.Done)
+		{//if server connect fails
+			return 1;
+		}
+		break;
+	case 2:
+		if (socket.bind(port, sf::IpAddress::getLocalAddress()) != socket.Done)
+		{//if server connect fails
+			std::cout << "Client ip: " << sf::IpAddress::getLocalAddress().toString() << std::endl;
+			return 1;
+		}
+		break;
+	default:
+		break;
+	}
+	currentState = new Game;
+	currentState->init(&window, &input, &socket);
 
 	while (window.isOpen())
 	{

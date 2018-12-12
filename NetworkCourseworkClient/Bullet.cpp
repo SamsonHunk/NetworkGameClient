@@ -40,9 +40,8 @@ void Bullet::init(float x, float y)
 	//attach shape
 	physicsBody->CreateFixture(&bulletFixture);
 	physicsBody->SetUserData(this);
-
-	awake = false;
 	physicsBody->SetActive(false);
+	awake = false;
 }
 
 void Bullet::serverAssert(float x, float y)
@@ -58,8 +57,8 @@ ObjectType Bullet::getType()
 void Bullet::activate(float x, float y, bool dirIn)
 {//grab the bullet and send it on it's way
 	awake = true;
-	physicsBody->SetActive(true);
 	physicsBody->SetTransform(b2Vec2(x, y), 0);
+	physicsBody->SetActive(true);
 	dir = dirIn;
 	newBullet = true;
 }

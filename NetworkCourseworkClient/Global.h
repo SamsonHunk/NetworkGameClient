@@ -9,6 +9,7 @@ extern struct playerMoveMessage {
 	float xPos;
 	float yPos;
 	int playerNum;
+	bool dir;
 };
 
 extern struct  connectionMessage
